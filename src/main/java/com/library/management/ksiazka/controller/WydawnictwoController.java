@@ -1,6 +1,7 @@
+package com.library.management.ksiazka.controller;
+
 import com.library.management.ksiazka.entities.Wydawnictwo;
 import com.library.management.ksiazka.services.WydawnictwoService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
