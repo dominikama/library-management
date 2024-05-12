@@ -127,7 +127,6 @@ public class DefaultKsiazkaService implements KsiazkaService {
         ksiazka.setIlosc(1);
         ksiazkaRepository.save(ksiazka);
         dodajKsiazkeDoAutorow(autorzy, ksiazka);
-        ksiazka.setAutorzy(autorzy);
     }
 
     private void dodajKsiazkeDoAutorow(Set<Autor> autorzy, Ksiazka ksiazka) {
