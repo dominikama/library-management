@@ -1,5 +1,5 @@
 package com.library.management.ksiazka.entities;
 
 public enum Status {
-    DOSTEPNA, WYDANA, ZAREZERWOWANA
+    DOSTEPNA, WYDANA, ZAREZERWOWANA, ZAREZERWOWANA_PRIORYTET
 }
