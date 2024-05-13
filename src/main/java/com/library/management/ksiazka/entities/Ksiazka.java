@@ -1,6 +1,7 @@
 package com.library.management.ksiazka.entities;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.library.management.rezerwacje.Rezerwacja;
 import jakarta.persistence.*;
 
 import java.util.Set;
@@ -29,6 +30,9 @@ public class Ksiazka {
     )
     @JsonManagedReference
     private Set<Autor> autorzy;
+
+    @ManyToMany(mappedBy = "ksiazki")
+    private Set<Rezerwacja> rezerwacje;
 
     public int getKsiazkaId() {
         return ksiazkaId;
@@ -68,6 +72,14 @@ public class Ksiazka {
 
     public void setIlosc(int ilosc) {
         this.ilosc = ilosc;
+    }
+
+    public Set<Rezerwacja> getRezerwacje() {
+        return rezerwacje;
+    }
+
+    public void setRezerwacje(Set<Rezerwacja> rezerwacje) {
+        this.rezerwacje = rezerwacje;
     }
 }
 
