@@ -1,11 +1,14 @@
 package com.library.management.ksiazka.controller;
 
+import com.library.management.ksiazka.controller.dtos.KsiazkaRequestDTO;
+import com.library.management.ksiazka.controller.dtos.KsiazkaResponseDTO;
 import com.library.management.ksiazka.entities.Ksiazka;
 import com.library.management.ksiazka.services.KsiazkaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/ksiazki")
@@ -15,7 +18,7 @@ public class KsiazkaController {
     private KsiazkaService ksiazkaService;
 
     @PostMapping
-    public Ksiazka dodajKsiazke(@RequestBody Ksiazka ksiazka) {
+    public KsiazkaResponseDTO dodajKsiazke(@RequestBody KsiazkaRequestDTO ksiazka) {
         return ksiazkaService.dodajKsiazke(ksiazka);
     }
 
@@ -28,12 +31,12 @@ public class KsiazkaController {
         }
     }
     @PutMapping("/{ksiazkaId}")
-    public Ksiazka wydajKsiazke(@PathVariable int ksiazkaId) {
+    public KsiazkaResponseDTO wydajKsiazke(@PathVariable int ksiazkaId) {
         return ksiazkaService.wydajKsiazke(ksiazkaId);
     }
 
     @PutMapping("/odbierz/{ksiazkaId}")
-    public Ksiazka odbierzKsiazke(@PathVariable int ksiazkaId) {
+    public KsiazkaResponseDTO odbierzKsiazke(@PathVariable int ksiazkaId) {
         return ksiazkaService.odbierzKsiazke(ksiazkaId);
     }
 }

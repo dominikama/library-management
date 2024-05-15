@@ -3,6 +3,8 @@ package com.library.management.rezerwacje;
 import com.library.management.ksiazka.entities.Ksiazka;
 import com.library.management.uzytkownik.Uzytkownik;
 import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Set;
 
@@ -14,15 +16,11 @@ public class Rezerwacja {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int rezerwacjaId;
 
-    @Temporal(TemporalType.DATE)
-    private Date startRezerwacja;
+    private LocalDateTime startRezerwacja;
 
-    @Temporal(TemporalType.DATE)
-    private Date koniecRezerwacja;
+    private LocalDateTime  koniecRezerwacja;
 
-    private boolean priorytet;
-
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany
     @JoinTable(
             name = "rezerwacja_ksiazka",
             joinColumns = @JoinColumn(name = "rezerwacja_id"),
@@ -30,7 +28,7 @@ public class Rezerwacja {
     )
     private Set<Ksiazka> ksiazki;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "uzytkownik_id", nullable = false)
     private Uzytkownik uzytkownik;
 
@@ -42,19 +40,19 @@ public class Rezerwacja {
         this.rezerwacjaId = rezerwacjaId;
     }
 
-    public Date getStartRezerwacja() {
+    public LocalDateTime getStartRezerwacja() {
         return startRezerwacja;
     }
 
-    public void setStartRezerwacja(Date startRezerwacja) {
+    public void setStartRezerwacja(LocalDateTime startRezerwacja) {
         this.startRezerwacja = startRezerwacja;
     }
 
-    public Date getKoniecRezerwacja() {
+    public LocalDateTime getKoniecRezerwacja() {
         return koniecRezerwacja;
     }
 
-    public void setKoniecRezerwacja(Date koniecRezerwacja) {
+    public void setKoniecRezerwacja(LocalDateTime koniecRezerwacja) {
         this.koniecRezerwacja = koniecRezerwacja;
     }
 
