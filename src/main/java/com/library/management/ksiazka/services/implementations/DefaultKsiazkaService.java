@@ -1,5 +1,7 @@
 package com.library.management.ksiazka.services.implementations;
 
+import com.library.management.ksiazka.controller.dtos.KsiazkaRequestDTO;
+import com.library.management.ksiazka.controller.dtos.KsiazkaResponseDTO;
 import com.library.management.ksiazka.entities.*;
 import com.library.management.ksiazka.repositories.AutorRepository;
 import com.library.management.ksiazka.repositories.DaneKsiazkiRepository;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class DefaultKsiazkaService implements KsiazkaService {
@@ -32,13 +35,25 @@ public class DefaultKsiazkaService implements KsiazkaService {
     }
 
     @Override
-    public Ksiazka dodajKsiazke(Ksiazka ksiazka) {
-        DaneKsiazki zapisane = zapiszDaneKsiazki(ksiazka.getDaneKsiazki());
-        ksiazka.setDaneKsiazki(zapisane);
-        Set<Autor> przetworzeniAutorzy = zapiszAutorow(ksiazka.getAutorzy());
-        ksiazka.setAutorzy(przetworzeniAutorzy);
-        ksiazka.setStatus(Status.DOSTEPNA);
-        return ksiazkaRepository.save(ksiazka);
+    public KsiazkaResponseDTO dodajKsiazke(KsiazkaRequestDTO ksiazkaDTO) {
+        Set<Autor> autorzy = ksiazkaDTO.getAutorIds().stream()
+                .map(id -> autorRepository.findById(id).orElseThrow(() -> new RuntimeException("Autor nie znaleziony: " + id)))
+                .collect(Collectors.toSet());
+
+        Wydawnictwo wydawnictwo = wydawnictwoRepository.findById(ksiazkaDTO.getWydawnictwoId())
+                .orElseThrow( () -> new IllegalArgumentException("Wydawnictwo nie istnieje"));
+
+        DaneKsiazki daneKsiazki = daneKsiazkiRepository
+                .findByTytulAndRokWydaniaAndAutorzyIn(ksiazkaDTO.getTytul(), ksiazkaDTO.getRokWydania(), autorzy)
+                .orElseGet(() -> stworzDaneKsiazki(ksiazkaDTO, autorzy, wydawnictwo));
+
+        for (int i = 0; i < ksiazkaDTO.getIlosc(); i++) {
+            Ksiazka ksiazka = new Ksiazka();
+            ksiazka.setDaneKsiazki(daneKsiazki);
+            ksiazka.setStatus(Status.DOSTEPNA);
+            ksiazkaRepository.save(ksiazka);
+        }
+        return populujResponse(daneKsiazki, Status.DOSTEPNA);
     }
 
     @Override
@@ -49,90 +64,46 @@ public class DefaultKsiazkaService implements KsiazkaService {
     @Override
     public List<Ksiazka> wyswietlKsiazkiOdanymStatusie(String inputStatus) {
         Status status = Status.valueOf(inputStatus);
-        return ksiazkaRepository.findAllByStatus(status).stream().filter(k -> k.getIlosc() > 0).toList();
+        return wyswietlKsiazki()
+                .stream()
+                .filter(ksiazka -> ksiazka.getStatus().equals(status))
+                .toList();
     }
 
     @Override
-    public Ksiazka wydajKsiazke(int ksiazkaId) {
+    public KsiazkaResponseDTO wydajKsiazke(int ksiazkaId) {
         Ksiazka doWydania = ksiazkaRepository.findById(ksiazkaId)
-                .orElseThrow(() -> new IllegalArgumentException("Ksiazka not found"));
-        if (!(doWydania.getIlosc() > 0)) {
-            throw new IllegalArgumentException("Ksiazka nie jest dostepna!");
-        }
-        //zmniejsz ilosc dostepnych ksiazek
-        zmniejszIlosc(doWydania);
-
-        //znajdz w tabeli ksiazke z tymi danymi ze statusem WYDANA, jesli obecna zwieksz ilosc, jesli nie dodaj do tabeli
-        ksiazkaRepository.findAllByDaneKsiazki(doWydania.getDaneKsiazki())
-                .stream().filter(ksiazka -> Status.WYDANA.equals(ksiazka.getStatus()))
-                .findFirst()
-                .ifPresentOrElse(this::zwiekszIlosc, () ->
-                        utworzKsiazke(doWydania.getDaneKsiazki(), doWydania.getAutorzy()));
-        return doWydania;
+                .orElseThrow(() -> new IllegalArgumentException("Ksiazka nie znaleziona"));
+        doWydania.setStatus(Status.WYDANA);
+        ksiazkaRepository.save(doWydania);
+        return populujResponse(doWydania.getDaneKsiazki(), Status.WYDANA);
     }
 
     @Override
-    public Ksiazka odbierzKsiazke(int ksiazkaId) {
+    public KsiazkaResponseDTO odbierzKsiazke(int ksiazkaId) {
         Ksiazka doOdebrania = ksiazkaRepository.findById(ksiazkaId)
                 .orElseThrow(() -> new IllegalArgumentException("Ksiazka nie znaleziona"));
-        if (!(doOdebrania.getIlosc() > 0)) {
-            throw new IllegalArgumentException("Ksiazka nie jest dostepna!");
-        }
-        //zmniejsz ilosc wydanych ksiazek
-       zmniejszIlosc(doOdebrania);
-
-        //znajdz w tabeli ksiazke z tymi danymi ze statusem WYDANA i zmniejsz ilosc
-        ksiazkaRepository.findAllByDaneKsiazki(doOdebrania.getDaneKsiazki())
-                .stream().filter(ksiazka -> Status.DOSTEPNA.equals(ksiazka.getStatus()))
-                .findFirst()
-                .ifPresentOrElse(this::zmniejszIlosc, () ->
-                        new IllegalArgumentException("Ksiazka ze statusem dostepna powinna byc obecna"));
-        return doOdebrania;
+        doOdebrania.setStatus(Status.DOSTEPNA);
+        ksiazkaRepository.save(doOdebrania);
+        return populujResponse(doOdebrania.getDaneKsiazki(), Status.DOSTEPNA);
     }
 
-    private DaneKsiazki zapiszDaneKsiazki(DaneKsiazki daneKsiazki) {
-        //zapisz wydawnictwo
-        Wydawnictwo przetworzoneWydawnictwo = daneKsiazki.getWydawnictwo();
-        Wydawnictwo zapisane = wydawnictwoRepository.findByWydawnictwoNazwa(przetworzoneWydawnictwo.getWydawnictwoNazwa())
-                .orElseGet(() -> wydawnictwoRepository.save(przetworzoneWydawnictwo));
-        daneKsiazki.setWydawnictwo(zapisane);
-        //zapisz dane ksiazki
-        return daneKsiazkiRepository.save(daneKsiazki);
+    private DaneKsiazki stworzDaneKsiazki(KsiazkaRequestDTO ksiazkaDTO, Set<Autor> autorzy, Wydawnictwo wydawnictwo) {
+        DaneKsiazki noweDane = new DaneKsiazki();
+        noweDane.setTytul(ksiazkaDTO.getTytul());
+        noweDane.setAutorzy(autorzy);
+        noweDane.setWydawnictwo(wydawnictwo);
+        noweDane.setRokWydania(ksiazkaDTO.getRokWydania());
+        return daneKsiazkiRepository.save(noweDane);
     }
 
-    private Set<Autor> zapiszAutorow(Set<Autor> autorzy) {
-        //zapisz autorów
-        Set<Autor> przetworzeniAutorzy = new HashSet<>();
-        for (Autor autor : autorzy) {
-            Autor zapisanyAutor = autorRepository
-                    .findByImieAndNazwisko(autor.getImie(), autor.getNazwisko())
-                    .orElseGet(() -> autorRepository.save(autor)); // Zapisz nowego autora, jeśli nie istnieje
-            przetworzeniAutorzy.add(zapisanyAutor);
-        }
-        return przetworzeniAutorzy;
-    }
-    private void zmniejszIlosc(Ksiazka ksiazka) {
-        ksiazka.setIlosc(ksiazka.getIlosc() - 1);
-        ksiazkaRepository.save(ksiazka);
-    }
-    private void zwiekszIlosc(Ksiazka ksiazka) {
-        ksiazka.setIlosc(ksiazka.getIlosc() + 1);
-        ksiazkaRepository.save(ksiazka);
-    }
-
-    private void utworzKsiazke(DaneKsiazki daneKsiazki, Set<Autor> autorzy) {
-        Ksiazka ksiazka = new Ksiazka();
-        ksiazka.setDaneKsiazki(daneKsiazki);
-        ksiazka.setStatus(Status.WYDANA);
-        ksiazka.setIlosc(1);
-        ksiazkaRepository.save(ksiazka);
-        dodajKsiazkeDoAutorow(autorzy, ksiazka);
-    }
-
-    private void dodajKsiazkeDoAutorow(Set<Autor> autorzy, Ksiazka ksiazka) {
-        for (Autor autor : autorzy) {
-            autor.getKsiazki().add(ksiazka);
-            autorRepository.save(autor);
-        }
+    private KsiazkaResponseDTO populujResponse(DaneKsiazki daneKsiazki, Status status) {
+        KsiazkaResponseDTO responseDTO = new KsiazkaResponseDTO();
+        responseDTO.setTytul(daneKsiazki.getTytul());
+        responseDTO.setAutorzy(daneKsiazki.getAutorzy());
+        responseDTO.setWydawnictwo(daneKsiazki.getWydawnictwo());
+        responseDTO.setStatus(status);
+        responseDTO.setIlosc(ksiazkaRepository.countByDaneKsiazkiAndStatus(daneKsiazki, status));
+        return responseDTO;
     }
 }

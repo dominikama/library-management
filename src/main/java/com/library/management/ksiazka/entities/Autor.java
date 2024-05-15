@@ -1,8 +1,10 @@
 package com.library.management.ksiazka.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -18,8 +20,8 @@ public class Autor {
     private String nazwisko;
 
     @ManyToMany(mappedBy = "autorzy", fetch = FetchType.LAZY)
-    @JsonBackReference
-    private Set<Ksiazka> ksiazki;
+    @JsonIgnore
+    private Set<DaneKsiazki> daneKsiazki = new HashSet<>();
 
     public int getAutorId() {
         return autorId;
@@ -45,11 +47,11 @@ public class Autor {
         this.nazwisko = nazwisko;
     }
 
-    public Set<Ksiazka> getKsiazki() {
-        return ksiazki;
+    public Set<DaneKsiazki> getDaneKsiazki() {
+        return daneKsiazki;
     }
 
-    public void setKsiazki(Set<Ksiazka> ksiazki) {
-        this.ksiazki = ksiazki;
+    public void setDaneKsiazki(Set<DaneKsiazki> daneKsiazki) {
+        this.daneKsiazki = daneKsiazki;
     }
 }

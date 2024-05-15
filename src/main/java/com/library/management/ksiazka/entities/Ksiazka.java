@@ -1,5 +1,6 @@
 package com.library.management.ksiazka.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.library.management.rezerwacje.Rezerwacja;
 import jakarta.persistence.*;
@@ -21,17 +22,8 @@ public class Ksiazka {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    private int ilosc;
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "autorzy_ksiazki",
-            joinColumns = @JoinColumn(name = "ksiazka_id"),
-            inverseJoinColumns = @JoinColumn(name = "autor_id")
-    )
-    @JsonManagedReference
-    private Set<Autor> autorzy;
-
     @ManyToMany(mappedBy = "ksiazki")
+    @JsonIgnore
     private Set<Rezerwacja> rezerwacje;
 
     public int getKsiazkaId() {
@@ -56,22 +48,6 @@ public class Ksiazka {
 
     public void setStatus(Status status) {
         this.status = status;
-    }
-
-    public Set<Autor> getAutorzy() {
-        return autorzy;
-    }
-
-    public void setAutorzy(Set<Autor> autorzy) {
-        this.autorzy = autorzy;
-    }
-
-    public int getIlosc() {
-        return ilosc;
-    }
-
-    public void setIlosc(int ilosc) {
-        this.ilosc = ilosc;
     }
 
     public Set<Rezerwacja> getRezerwacje() {

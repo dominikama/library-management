@@ -1,7 +1,9 @@
 package com.library.management.uzytkownik;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.library.management.rezerwacje.Rezerwacja;
+import jakarta.annotation.PostConstruct;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -23,8 +25,8 @@ public class Uzytkownik {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @OneToMany(mappedBy = "uzytkownik", fetch = FetchType.LAZY)
-    @JsonBackReference
+    @OneToMany(mappedBy = "uzytkownik")
+    @JsonIgnore
     private List<Rezerwacja> rezerwacje;
 
     public int getUzytkownikId() {

@@ -1,6 +1,10 @@
 package com.library.management.ksiazka.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+
+import java.util.Set;
 
 @Entity
 @Table(name = "dane_ksiazki")
@@ -17,6 +21,14 @@ public class DaneKsiazki {
     @ManyToOne
     @JoinColumn(name = "wydawnictwo_id")
     private Wydawnictwo wydawnictwo;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "autorzy_ksiazki",
+            joinColumns = @JoinColumn(name = "dane_ksiazki_id"),
+            inverseJoinColumns = @JoinColumn(name = "autor_id")
+    )
+    private Set<Autor> autorzy;
 
     public int getDaneKsiazkiId() {
         return daneKsiazkiId;
@@ -48,6 +60,13 @@ public class DaneKsiazki {
 
     public void setWydawnictwo(Wydawnictwo wydawnictwo) {
         this.wydawnictwo = wydawnictwo;
+    }
+    public Set<Autor> getAutorzy() {
+        return autorzy;
+    }
+
+    public void setAutorzy(Set<Autor> autorzy) {
+        this.autorzy = autorzy;
     }
 }
 
