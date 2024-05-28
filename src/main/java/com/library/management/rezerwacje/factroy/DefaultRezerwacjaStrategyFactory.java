@@ -10,10 +10,18 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * The type Default rezerwacja strategy factory.
+ */
 @Component
 public class DefaultRezerwacjaStrategyFactory implements RezerwacjaStrategyFactory{
     private final Map<Typ, RezerwacjaStrategy> startegyMap;
 
+    /**
+     * Instantiates a new Default rezerwacja strategy factory.
+     *
+     * @param rezerwacjaStrategies the rezerwacja strategies
+     */
     public DefaultRezerwacjaStrategyFactory(List<RezerwacjaStrategy> rezerwacjaStrategies) {
         startegyMap = rezerwacjaStrategies.stream().collect(Collectors.toUnmodifiableMap(RezerwacjaStrategy::getTyp,
                 Function.identity()));

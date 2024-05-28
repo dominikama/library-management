@@ -11,6 +11,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 
+/**
+ * The type Default wyswietl rezerwacje query test.
+ */
 @ExtendWith(MockitoExtension.class)
 class DefaultWyswietlRezerwacjeQueryTest {
 
@@ -20,6 +23,9 @@ class DefaultWyswietlRezerwacjeQueryTest {
     @InjectMocks
     private DefaultWyswietlRezerwacjeQuery query;
 
+    /**
+     * Wyswietl.
+     */
     @Test
     void wyswietl() {
 

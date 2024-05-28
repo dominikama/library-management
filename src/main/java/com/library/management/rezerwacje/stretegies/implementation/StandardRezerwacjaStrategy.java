@@ -4,7 +4,6 @@ import com.library.management.ksiazka.entities.Ksiazka;
 import com.library.management.ksiazka.entities.Status;
 import com.library.management.ksiazka.repositories.KsiazkaRepository;
 import com.library.management.rezerwacje.Rezerwacja;
-import com.library.management.rezerwacje.RezerwacjaRepository;
 import com.library.management.rezerwacje.stretegies.RezerwacjaStrategy;
 import com.library.management.rezerwacje.stretegies.Typ;
 import com.library.management.uzytkownik.Uzytkownik;
@@ -16,6 +15,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * The type Standard rezerwacja strategy.
+ */
 @Component
 public class StandardRezerwacjaStrategy implements RezerwacjaStrategy {
 
@@ -23,6 +25,12 @@ public class StandardRezerwacjaStrategy implements RezerwacjaStrategy {
 
     private KsiazkaRepository ksiazkaRepository;
 
+    /**
+     * Instantiates a new Standard rezerwacja strategy.
+     *
+     * @param uzytkownikRepository the uzytkownik repository
+     * @param ksiazkaRepository    the ksiazka repository
+     */
     public StandardRezerwacjaStrategy(UzytkownikRepository uzytkownikRepository, KsiazkaRepository ksiazkaRepository) {
         this.uzytkownikRepository = uzytkownikRepository;
         this.ksiazkaRepository = ksiazkaRepository;

@@ -16,6 +16,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.*;
 
+/**
+ * The type Default ksiazka service test.
+ */
 public class DefaultKsiazkaServiceTest {
 
     @Mock
@@ -32,12 +35,18 @@ public class DefaultKsiazkaServiceTest {
 
     private DefaultKsiazkaService ksiazkaService;
 
+    /**
+     * Sets up.
+     */
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
         ksiazkaService = new DefaultKsiazkaService(ksiazkaRepository, daneKsiazkiRepository, autorRepository, wydawnictwoRepository);
     }
 
+    /**
+     * Test dodaj ksiazke.
+     */
     @Test
     void testDodajKsiazke() {
         when(autorRepository.findById(1)).thenReturn(Optional.of(mockAutor(1, "Jan", "Kowalski")));
@@ -55,6 +64,9 @@ public class DefaultKsiazkaServiceTest {
         verify(ksiazkaRepository, times(1)).save(any(Ksiazka.class));
     }
 
+    /**
+     * Test dodaj ksiazki ilosc 5.
+     */
     @Test
     void testDodajKsiazkiIlosc5() {
         when(autorRepository.findById(1)).thenReturn(Optional.of(mockAutor(1, "Jan", "Kowalski")));
@@ -72,6 +84,9 @@ public class DefaultKsiazkaServiceTest {
         verify(ksiazkaRepository, times(5)).save(any(Ksiazka.class));
     }
 
+    /**
+     * Test dodaj ksiazke istniejace dane.
+     */
     @Test
     void testDodajKsiazkeIstniejaceDane() {
         when(autorRepository.findById(1)).thenReturn(Optional.of(mockAutor(1, "Jan", "Kowalski")));
@@ -88,6 +103,10 @@ public class DefaultKsiazkaServiceTest {
         verify(daneKsiazkiRepository, times(0)).save(any(DaneKsiazki.class));
         verify(ksiazkaRepository, times(1)).save(any(Ksiazka.class));
     }
+
+    /**
+     * Test wyswietl ksiazki.
+     */
     @Test
     void testWyswietlKsiazki() {
         when(ksiazkaRepository.findAll()).thenReturn(List.of(new Ksiazka()));
@@ -96,6 +115,9 @@ public class DefaultKsiazkaServiceTest {
         verify(ksiazkaRepository, times(1)).findAll();
     }
 
+    /**
+     * Test wyswietl ksiazki status.
+     */
     @Test
     void testWyswietlKsiazkiStatus() {
         Ksiazka ksiazka = new Ksiazka();
@@ -110,6 +132,9 @@ public class DefaultKsiazkaServiceTest {
         verify(ksiazkaRepository, times(1)).findAll();
     }
 
+    /**
+     * Test wydaj ksiazke.
+     */
     @Test
     void testWydajKsiazke() {
         Ksiazka ksiazka = new Ksiazka();
@@ -122,6 +147,9 @@ public class DefaultKsiazkaServiceTest {
         verify(ksiazkaRepository).save(ksiazka);
     }
 
+    /**
+     * Test odbierz ksiazke.
+     */
     @Test
     void testOdbierzKsiazke() {
         Ksiazka ksiazka = new Ksiazka();

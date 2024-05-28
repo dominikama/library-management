@@ -10,6 +10,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
+/**
+ * The type Default odwolaj rezerwacje command.
+ */
 @Component
 public class DefaultOdwolajRezerwacjeCommand implements OdwolajRezerwacjeCommand {
 
@@ -18,6 +21,12 @@ public class DefaultOdwolajRezerwacjeCommand implements OdwolajRezerwacjeCommand
     private KsiazkaRepository ksiazkaRepository;
 
 
+    /**
+     * Instantiates a new Default odwolaj rezerwacje command.
+     *
+     * @param rezerwacjaRepository the rezerwacja repository
+     * @param ksiazkaRepository    the ksiazka repository
+     */
     public DefaultOdwolajRezerwacjeCommand(RezerwacjaRepository rezerwacjaRepository,
                                            KsiazkaRepository ksiazkaRepository) {
         this.rezerwacjaRepository = rezerwacjaRepository;

@@ -10,8 +10,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+/**
+ * The type Default wydawnictwo service test.
+ */
 class DefaultWydawnictwoServiceTest {
 
+    /**
+     * Dodaj wydawnictwo.
+     */
     @Test
     void dodajWydawnictwo() {
         WydawnictwoRepository wydawnictwoRepository = mock(WydawnictwoRepository.class);
@@ -20,6 +26,9 @@ class DefaultWydawnictwoServiceTest {
         verify(wydawnictwoRepository, times(1)).save(any(Wydawnictwo.class));
     }
 
+    /**
+     * Wyswietl wydawnictwa.
+     */
     @Test
     void wyswietlWydawnictwa() {
         List<Wydawnictwo> wydawnictwa = List.of(mockWydawnictwa("Test"), mockWydawnictwa("Test 2"));

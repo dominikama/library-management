@@ -21,6 +21,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+/**
+ * The type Default odwolaj rezerwacje command test.
+ */
 @ExtendWith(MockitoExtension.class)
 class DefaultOdwolajRezerwacjeCommandTest {
 
@@ -36,6 +39,9 @@ class DefaultOdwolajRezerwacjeCommandTest {
     private Rezerwacja rezerwacja;
     private Set<Ksiazka> ksiazki;
 
+    /**
+     * Sets up.
+     */
     @BeforeEach
     void setUp() {
         ksiazki = new HashSet<>();
@@ -52,6 +58,9 @@ class DefaultOdwolajRezerwacjeCommandTest {
         rezerwacja.setKsiazki(ksiazki);
     }
 
+    /**
+     * Test odwolaj success.
+     */
     @Test
     void testOdwolajSuccess() {
         when(rezerwacjaRepository.findById(1)).thenReturn(Optional.of(rezerwacja));
@@ -65,6 +74,9 @@ class DefaultOdwolajRezerwacjeCommandTest {
         ksiazki.forEach(ksiazka -> verify(ksiazkaRepository).save(ksiazka));
     }
 
+    /**
+     * Test odwolaj rezerwacja not found.
+     */
     @Test
     void testOdwolajRezerwacjaNotFound() {
         when(rezerwacjaRepository.findById(1)).thenReturn(Optional.empty());

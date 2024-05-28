@@ -6,11 +6,23 @@ import com.library.management.ksiazka.services.WydawnictwoService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+/**
+ * The type Default wydawnictwo service.
+ */
 @Service
 public class DefaultWydawnictwoService implements WydawnictwoService {
 
+    /**
+     * The Wydawnictwo repository.
+     */
     WydawnictwoRepository wydawnictwoRepository;
 
+    /**
+     * Instantiates a new Default wydawnictwo service.
+     *
+     * @param wydawnictwoRepository the wydawnictwo repository
+     */
     public DefaultWydawnictwoService(WydawnictwoRepository wydawnictwoRepository) {
         this.wydawnictwoRepository = wydawnictwoRepository;
     }

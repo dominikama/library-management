@@ -7,11 +7,19 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * The type Default autor service.
+ */
 @Service
 public class DefaultAutorService implements AutorService {
 
     private AutorRepository autorRepository;
 
+    /**
+     * Instantiates a new Default autor service.
+     *
+     * @param autorRepository the autor repository
+     */
     public DefaultAutorService(AutorRepository autorRepository) {
         this.autorRepository = autorRepository;
     }
