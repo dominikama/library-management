@@ -10,11 +10,13 @@ import com.library.management.ksiazka.repositories.WydawnictwoRepository;
 import com.library.management.ksiazka.services.KsiazkaService;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * The type Default ksiazka service.
+ */
 @Service
 public class DefaultKsiazkaService implements KsiazkaService {
 
@@ -26,6 +28,14 @@ public class DefaultKsiazkaService implements KsiazkaService {
 
     private WydawnictwoRepository wydawnictwoRepository;
 
+    /**
+     * Instantiates a new Default ksiazka service.
+     *
+     * @param ksiazkaRepository     the ksiazka repository
+     * @param daneKsiazkiRepository the dane ksiazki repository
+     * @param autorRepository       the autor repository
+     * @param wydawnictwoRepository the wydawnictwo repository
+     */
     public DefaultKsiazkaService(KsiazkaRepository ksiazkaRepository, DaneKsiazkiRepository daneKsiazkiRepository,
                                  AutorRepository autorRepository, WydawnictwoRepository wydawnictwoRepository) {
         this.ksiazkaRepository = ksiazkaRepository;

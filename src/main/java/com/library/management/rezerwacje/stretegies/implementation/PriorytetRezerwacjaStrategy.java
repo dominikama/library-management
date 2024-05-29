@@ -15,6 +15,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * The type Priorytet rezerwacja strategy.
+ */
 @Component
 public class PriorytetRezerwacjaStrategy implements RezerwacjaStrategy {
 
@@ -22,6 +25,12 @@ public class PriorytetRezerwacjaStrategy implements RezerwacjaStrategy {
 
     private KsiazkaRepository ksiazkaRepository;
 
+    /**
+     * Instantiates a new Priorytet rezerwacja strategy.
+     *
+     * @param uzytkownikRepository the uzytkownik repository
+     * @param ksiazkaRepository    the ksiazka repository
+     */
     public PriorytetRezerwacjaStrategy(UzytkownikRepository uzytkownikRepository, KsiazkaRepository ksiazkaRepository) {
         this.uzytkownikRepository = uzytkownikRepository;
         this.ksiazkaRepository = ksiazkaRepository;

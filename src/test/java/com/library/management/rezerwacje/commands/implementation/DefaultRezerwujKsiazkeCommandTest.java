@@ -19,6 +19,9 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+/**
+ * The type Default rezerwuj ksiazke command test.
+ */
 @ExtendWith(MockitoExtension.class)
 class DefaultRezerwujKsiazkeCommandTest {
     @Mock
@@ -33,12 +36,18 @@ class DefaultRezerwujKsiazkeCommandTest {
     @InjectMocks
     private DefaultRezerwujKsiazkeCommand command;
 
+    /**
+     * Sets up.
+     */
     @BeforeEach
     void setUp() {
         when(rezerwacjaStrategyFactory.getRezerwacjaStrategy(Typ.STANDARD)).thenReturn(rezerwacjaStrategy);
     }
 
 
+    /**
+     * Test rezerwuj ksiazke.
+     */
     @Test
     void testRezerwujKsiazke() {
         RezerwacjaRequest request = new RezerwacjaRequest();

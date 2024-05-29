@@ -19,6 +19,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
+/**
+ * The type Standard rezerwacja strategy test.
+ */
 class StandardRezerwacjaStrategyTest {
 
 
@@ -31,11 +34,17 @@ class StandardRezerwacjaStrategyTest {
     @InjectMocks
     private StandardRezerwacjaStrategy  strategy;
 
+    /**
+     * Sets up.
+     */
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
+    /**
+     * Should create reservation for existing user and books.
+     */
     @Test
     void shouldCreateReservationForExistingUserAndBooks() {
         // Given
@@ -59,6 +68,9 @@ class StandardRezerwacjaStrategyTest {
         assertNotNull(result.getKoniecRezerwacja());
     }
 
+    /**
+     * Should throw exception when user does not exist.
+     */
     @Test
     void shouldThrowExceptionWhenUserDoesNotExist() {
         // Given
@@ -74,6 +86,9 @@ class StandardRezerwacjaStrategyTest {
         });
     }
 
+    /**
+     * Should throw exception when book does not exist.
+     */
     @Test
     void shouldThrowExceptionWhenBookDoesNotExist() {
         // Given

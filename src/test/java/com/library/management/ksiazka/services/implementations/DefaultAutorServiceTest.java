@@ -10,7 +10,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+/**
+ * The type Default autor service test.
+ */
 class DefaultAutorServiceTest {
+    /**
+     * Dodaj autor.
+     */
     @Test
     void dodajAutor() {
         AutorRepository autorRepository = mock(AutorRepository.class);
@@ -19,6 +25,9 @@ class DefaultAutorServiceTest {
         verify(autorRepository, times(1)).save(any(Autor.class));
     }
 
+    /**
+     * Wyswietl autorzy.
+     */
     @Test
     void wyswietlAutorzy() {
         List<Autor> autorzy = List.of(mockAutora("Anna", "Kowalska"), mockAutora("Jan", "Kowalski"));
